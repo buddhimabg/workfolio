@@ -1,0 +1,102 @@
+// Prisma schema for Workfolio Job Listing Platform
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  JOB_SEEKER
+  HIRING_MANAGER
+  ADMIN
+}
+
+enum WorkplaceType {
+  REMOTE
+  HYBRID
+  ON_SITE
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum JobStatus {
+  ACTIVE
+  DRAFT
+  CLOSED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  INTERVIEWING
+  OFFERED
+  REJECTED
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String
+  name           String
+  role           Role     @default(JOB_SEEKER)
+  companyName    String?
+  companyWebsite String?
+  companyLogo    String?
+  bio            String?
+  title          String?
+  skills         String?
+  resumeUrl      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  postedJobs   Job[]         @relation("PostedJobs")
+  applications Application[]
+}
+
+model Job {
+  id             String         @id @default(cuid())
+  title          String
+  company        String
+  companyLogo    String?
+  location       String
+  workplaceType  WorkplaceType  @default(REMOTE)
+  employmentType EmploymentType @default(FULL_TIME)
+  salaryMin      Int?
+  salaryMax      Int?
+  currency       String         @default("USD")
+  description    String
+  requirements   String?
+  skills         String?
+  status         JobStatus      @default(ACTIVE)
+  postedById     String
+  postedBy       User           @relation("PostedJobs", fields: [postedById], references: [id], onDelete: Cascade)
+  applications   Application[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Application {
+  id           String            @id @default(cuid())
+  jobId        String
+  job          Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicantId  String
+  applicant    User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  resumeUrl    String?
+  coverLetter  String?
+  portfolioUrl String?
+  phone        String?
+  status       ApplicationStatus @default(SUBMITTED)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([jobId, applicantId])
+}
