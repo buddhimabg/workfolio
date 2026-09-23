@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Workfolio | Modern Job Discovery & Hiring Platform",
+  title: "Jobly | Find the job that fits your life",
   description:
-    "Post open roles, manage applicants, and apply for great careers.",
+    "Discover opportunities, grow your career, and build the future you deserve.",
 };
 
 export default function RootLayout({
@@ -29,28 +30,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <body className="min-h-full flex flex-col bg-[#F8F9FC] text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 font-sans">
         <Navbar />
-        <main className="flex-1">{children}</main>
-        <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-8 text-center text-sm text-zinc-500">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p>
-              © {new Date().getFullYear()} Workfolio. Connecting top talent with
-              leading companies.
-            </p>
-            <div className="flex gap-6">
-              <span className="hover:text-zinc-700 dark:hover:text-zinc-300">
-                Privacy
-              </span>
-              <span className="hover:text-zinc-700 dark:hover:text-zinc-300">
-                Terms
-              </span>
-              <span className="hover:text-zinc-700 dark:hover:text-zinc-300">
-                Support
-              </span>
-            </div>
-          </div>
-        </footer>
+        <div className="flex flex-1 w-full max-w-[1600px] mx-auto">
+          <Sidebar />
+          <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
+        </div>
       </body>
     </html>
   );
